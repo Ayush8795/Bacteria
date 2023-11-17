@@ -50,7 +50,7 @@ def main(input_dir, output_dir):
                     print(img_path)
                     # extend patches in case of colonies overlapping
                     adj_matrix = lib.adjacency_matrix_between_patches(coordinates)
-                    G = nx.from_numpy_matrix(adj_matrix) 
+                    G = nx.from_numpy_array(adj_matrix) 
                     connected_patches_list = list(nx.connected_components(G))
                     patches_to_del = []
                     patches_grouped_coordinates = {}

@@ -67,7 +67,7 @@ def main(colonies_dir, empty_dishes_dir, style_dir, generated_dir):
 		    ir = rnd.randrange(patches_no)
 		    patch_path = os.path.join(patches_dirs[flavour], patches_files[ir])
 		    patch = io.imread(patch_path)
-		    patch = tr.rescale(patch, lib.scalling_factor, anti_aliasing=True, multichannel=True)*255
+		    patch = tr.rescale(patch, lib.scalling_factor, anti_aliasing=True, channel_axis=-1)*255
 		    # increase variety of patches
 		    patch_rotation_angle = rnd.randint(0,3)
 		    patch = tr.rotate(patch, patch_rotation_angle*90, resize=True)
@@ -155,4 +155,4 @@ def main(colonies_dir, empty_dishes_dir, style_dir, generated_dir):
 		    with open(os.path.join(generated_dishes, gen_name + suffix + ".json"), 'w') as jf: json.dump(new_bbox_dict, jf)
 
 if __name__ == '__main__':
-    main()
+    main(colonies_dir='colonies',empty_dishes_dir='empty_dishes',style_dir='style_dishes',generated_dir='generated')

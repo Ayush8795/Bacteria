@@ -204,7 +204,7 @@ def filter_patch(patch, remove_labels=remove_labels_flag):
     size_c = patch.shape[2]
     b = color.rgb2lab(patch[:,:,:3])[:,:,2] # b in Lab colorspace 
     # unsharp mask
-    patch = unsharp_mask(patch, radius=100.0, amount=1.5, multichannel=True, preserve_range=False)
+    patch = unsharp_mask(patch, radius=100.0, amount=1.5, preserve_range=False, channel_axis=-1)
     # remove black areas
     L = color.rgb2lab(patch[:,:,:3])[:,:,0] # luminance in Lab colorspace
     #
@@ -238,8 +238,8 @@ def postpro_filtering(patch):
     """
     speckle noise cancellation
     """
-    sigma_est = np.mean(estimate_sigma(patch, multichannel=True))
-    patch_kw = dict(patch_size=5, patch_distance=13, multichannel=True)
+    sigma_est = np.mean(estimate_sigma(patch, channel_axis=-1))
+    patch_kw = dict(patch_size=5, patch_distance=13, channel_axis=-1)
     # denoising
     patch = denoise_nl_means(patch, h=1.5*sigma_est, sigma=sigma_est, fast_mode=True, **patch_kw)
     return patch
@@ -253,7 +253,7 @@ def segment_patch(patch):
     ii, jj = np.meshgrid(j, i, sparse=True)
     init_set = (np.sin(ii/1*np.pi)*np.sin(jj/1*np.pi))**2
     return chan_vese(color.rgb2gray(patch[:,:,:3]), mu=0.5, lambda1=1, lambda2=1, 
-                        tol=2e-3, max_iter=200,dt=0.5, init_level_set=init_set)
+                        tol=2e-3, max_num_iter=200,dt=0.5, init_level_set=init_set)
 
 def get_alpha_from_segmentation(patch):
     """
